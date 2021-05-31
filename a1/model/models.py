@@ -20,7 +20,8 @@ class models:
         def fit(self, X, Y):
             self._weight, self._bias, self._loss = method.perceptron(X, Y, self.max_pass)
 
-
+        def predict(self,test_X):
+            return test_X.T.dot(self._weight) + self._bias
 
     class ridge_regression_closed_form:
         _weight = np.array([])
@@ -36,7 +37,6 @@ class models:
             self._weight, self._bias = method.ridge_regression_closed_form(X, Y, self.Lambda)
 
         def predict(self, test_X):
-
             return test_X.T.dot(self._weight) + self._bias
 
     class ridge_regression_GD:
@@ -69,7 +69,7 @@ class models:
             self._weight, self._bias, self._loss = method.ridge_regression_Newton_method(X, Y, self.Lambda, self.Max_pass, self.learning_rate)
 
         def predict(self,test_X):
-            pass
+            return test_X.T.dot(self._weight) + self._bias
 
     class KNN:
         def __init__(self, k=1):
