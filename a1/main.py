@@ -1,6 +1,6 @@
 import numpy as np
-from src.models import *
-from src.method import *
+from model.models import *
+from model.method import *
 import time
 from matplotlib import pyplot as plt
 def main():
