@@ -81,6 +81,7 @@ def main():
         model.set_k(k)
         model.fit(X_train_E, Y_train_E)
         y_hat=model.predict(X_test_E)
+        print(k,y_hat)
         losses.append(loss(Y_test_E, y_hat))
         if k in [1,9]:
             if k == 1:

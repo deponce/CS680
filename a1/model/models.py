@@ -89,12 +89,12 @@ class models:
             return cnt/k
 
         def fit(self,X, Y):
-            self.train_X = X
+            self.train_X = X.T
             self.train_Y = Y
             n_train = len(Y)
             train = []
             for i in range(n_train):
-                train.append(self.data_pair(X[0,i], Y[i], 0))
+                train.append(self.data_pair(self.train_X[i],self.train_Y[i], 0))
             self.train_pairs = train
 
         def kthSmallest(self,arr, l, r, k):
@@ -123,13 +123,12 @@ class models:
 
         def predict(self, test_X):
             def l2_distance(x1, x2):
-                return (x1 - x2) ** 2
+                return np.sum((x1-x2)**2)
             Y_hat = []
             n_train = len(self.train_pairs)
-            for test_x in test_X[0]:
+            for test_x in test_X.T:
                 for train_idx in range(n_train):
                     self.train_pairs[train_idx].dist = l2_distance(test_x, self.train_pairs[train_idx].x)
-
                 self.kthSmallest(self.train_pairs, 0, n_train-1, self.k)
                 Y_hat.append(self.k_mean(self.train_pairs, self.k))
             return np.array(Y_hat)

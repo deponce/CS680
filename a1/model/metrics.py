@@ -5,7 +5,7 @@ def MSE(W, b, x, y):
     x = np.r_[x, np.ones((1, n_train_data))]
     w = np.append(W, b)
     n_data = y.shape[0]
-    return np.linalg.norm((x.T.dot(w)) - y, ord=2) ** 2/(2 * n_data)
+    return np.linalg.norm((x.T.dot(w)) - y, ord=2)**2/(2 * n_data)
 
 
 def MSE_l1(W, b, x, y, alpha=1):

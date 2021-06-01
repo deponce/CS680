@@ -36,18 +36,17 @@ def ridge_regression_GD(X_train_data, Y_train_data, Lambda, Max_pass, learning_r
     X_train_data_p = np.r_[X_train_data, np.ones((1, n_train_data))]
     X_train_data_p = X_train_data_p.T
     w = np.zeros(n_features+1)
-    factor = 1
     losses = []
     E = np.eye(n_features+1)
     E[-1,-1]=0
     for i in range(Max_pass):
 
-        w = w - learning_rate*factor*(
+        w = w - learning_rate*(
                 (1/n_train_data)*(X_train_data_p.T.dot(X_train_data_p).dot(w) -
                 X_train_data_p.T.dot(Y_train_data))+
-                2*Lambda*E.dot(w)
+                2*Lambda*E.T.dot(E.dot(w))
         )
-        losses.append(MSE_l1(w[:-1], w[-1], X_train_data, Y_train_data, alpha=1))
+        losses.append(MSE_l1(w[:-1], w[-1], X_train_data, Y_train_data, alpha=Lambda))
     return w[:-1], w[-1], losses
 
 def ridge_regression_Newton_method(X_train_data, Y_train_data, Lambda, Max_pass, learning_rate):
@@ -69,6 +68,6 @@ def ridge_regression_Newton_method(X_train_data, Y_train_data, Lambda, Max_pass,
                 X_train_data_p.T.dot(Y_train_data)+
                 Lambda*E.dot(w)))
         )
-        losses.append(MSE_l1(w[:-1], w[-1], X_train_data, Y_train_data, alpha=1))
+        losses.append(MSE_l1(w[:-1], w[-1], X_train_data, Y_train_data, alpha=Lambda))
     return w[:-1], w[-1], losses
 
