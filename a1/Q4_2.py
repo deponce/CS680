@@ -18,12 +18,15 @@ def main():
 
     X_test_D = np.genfromtxt('./data/X_test_D.csv', delimiter=",").reshape((1,-1))
     Y_test_D = np.genfromtxt('./data/Y_test_D.csv', delimiter=",")
-
+    min_x_D = np.min(np.append(X_train_D,X_test_D))
+    max_x_D = np.max(np.append(X_train_D, X_test_D))
     X_train_E = np.genfromtxt('./data/X_train_E.csv', delimiter=",").reshape((1,-1))
     Y_train_E = np.genfromtxt('./data/Y_train_E.csv', delimiter=",")
 
     X_test_E = np.genfromtxt('./data/X_test_E.csv', delimiter=",").reshape((1,-1))
     Y_test_E = np.genfromtxt('./data/Y_test_E.csv', delimiter=",")
+    min_x_E = np.min(np.append(X_train_E,X_test_E))
+    max_x_E = np.max(np.append(X_train_E, X_test_E))
 
     print("-----------------------------dataset D---------------------------------")
     model = models.ridge_regression_closed_form(Lambda=0)
@@ -51,7 +54,8 @@ def main():
             else:
                 color = "firebrick"
                 Lable = "9NN result"
-            plt.scatter(X_test_D[0],y_hat, c = color, alpha=0.5, label=Lable,marker='p')
+            plot_index = X_test_D[0].argsort()
+            plt.plot(X_test_D[0][plot_index], y_hat[plot_index], c=color, alpha=1, label=Lable, marker='p')
     plt.legend()
     plt.subplot(1,2,2)
     plt.xlabel("k")
@@ -71,7 +75,9 @@ def main():
     plt.title("least square solution, 1NN solution, and 9NN soultion on dataset E")
     plt.scatter(X_train_E,Y_train_E, c="darkslategray", alpha=0.8, label="Training set")
     plt.scatter(X_test_E, Y_test_E, c="seagreen", alpha=0.5, label="test set", edgecolors="seagreen")
+
     plt.plot(X_test_E[0], y_hat, c="indigo", alpha=0.5, label="closed-form result")
+
     plt.xlabel("x value")
     plt.ylabel("y value")
     losses = []
@@ -81,7 +87,6 @@ def main():
         model.set_k(k)
         model.fit(X_train_E, Y_train_E)
         y_hat=model.predict(X_test_E)
-        print(k,y_hat)
         losses.append(loss(Y_test_E, y_hat))
         if k in [1,9]:
             if k == 1:
@@ -90,7 +95,8 @@ def main():
             else:
                 color = "firebrick"
                 Lable = "9NN result"
-            plt.scatter(X_test_E[0], y_hat, c=color, alpha=0.5, label=Lable, marker='p')
+            plot_index=X_test_E[0].argsort()
+            plt.plot(X_test_E[0][plot_index], y_hat[plot_index], c=color, alpha=1, label=Lable, marker='p')
     plt.legend()
     plt.subplot(1,2,2)
     plt.xlabel("k")

@@ -20,15 +20,12 @@ def main():
     mseloss = loss(Y_test_F,y_hat)
     losses = []
     model = models.KNN()
-    model = models.KNN()
     model.fit(X_train_F, Y_train_F)
 
     for k in range(1,10):
         model.set_k(k)
         y_hat=model.predict(X_test_F)
-        print(k, y_hat)
         losses.append(loss(Y_test_F, y_hat))
-        print(k,y_hat)
     plt.xlabel("k")
     plt.ylabel("mean-square error")
     plt.title("least square error, and KNN error VS K on test dataset F")
