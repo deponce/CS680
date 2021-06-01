@@ -1,6 +1,7 @@
 import numpy as np
 from sklearn.linear_model import LinearRegression, Ridge, Lasso
 from matplotlib import pyplot as plt
+from sklearn.metrics import mean_squared_error
 print("###################################Q3_1#########################################")
 X_train_A = np.genfromtxt('./data/X_train_A.csv',delimiter = ",")
 X_train_B = np.genfromtxt('./data/X_train_B.csv',delimiter = ",")
@@ -25,48 +26,55 @@ Test_data_Y = [Y_test_A, Y_test_B, Y_test_C]
 def cal_MSE(w,b,x,y):
     n = len(y)
     e = np.dot(x,w)+b-y
-    return np.dot(e.T,e)/n
+    return np.linalg.norm(e, ord = 2)**2/n
 
-def get_Lasso_vector(X, Y, reg = 0.0):
+def get_Lasso_vector(X, Y,test_x,test_y, reg = 0.0):
     model = Lasso(alpha=reg,tol = 0.0005)
     model.fit(X, Y)
     w = model.coef_
     b = model.intercept_
-    return np.r_[w,b]
+    y_hat = model.predict(test_x)
+    error = mean_squared_error(y_hat, test_y)
+    return np.r_[w, b], error
 
-def get_Ridge_vector(X, Y, reg = 0.0):
+def get_Ridge_vector(X, Y,test_x,test_y, reg = 0.0):
     model = Ridge(alpha=reg)
     model.fit(X, Y)
     w = model.coef_
     b = model.intercept_
-    return np.r_[w,b]
+    y_hat = model.predict(test_x)
+    error = mean_squared_error(y_hat, test_y)
+    return np.r_[w, b], error
 
-def get_LinearRegression_vector(X, Y):
+def get_LinearRegression_vector(X, Y,test_x,test_y):
     model = LinearRegression()
     model.fit(X, Y)
     w = model.coef_
     b = model.intercept_
-    return np.r_[w,b]
+    y_hat = model.predict(test_x)
+    error = mean_squared_error(y_hat,test_y)
+    return np.r_[w,b], error
 
 dataset_name = ['A', 'B', 'C']
 num_bins = 200
-
+n_data = 300
 for idx, X in enumerate(Train_data_X):
     print("dataset: ", dataset_name[idx])
-    lrv = get_LinearRegression_vector(X, Train_data_Y[idx])
-    print("MES of LinearRegression: ",cal_MSE(lrv[:-1],lrv[-1],Test_data_X[idx],Test_data_Y[idx]))
+    lrv,error = get_LinearRegression_vector(X, Train_data_Y[idx],Test_data_X[idx],Test_data_Y[idx])
+    print("MES of LinearRegression: ", error)
 
-    r1v = get_Ridge_vector(X, Train_data_Y[idx], 1)
-    print("MES of Ridge with reg 1: ",cal_MSE(r1v[:-1],lrv[-1],Test_data_X[idx],Test_data_Y[idx]))
+    r1v,error = get_Ridge_vector(X, Train_data_Y[idx],Test_data_X[idx],Test_data_Y[idx], 1)
+    print("MES of Ridge with reg 1: ", error)
 
-    r10v = get_Ridge_vector(X, Train_data_Y[idx], 10)
-    print("MES of Ridge with reg 10: ",cal_MSE(r10v[:-1],lrv[-1],Test_data_X[idx],Test_data_Y[idx]))
+    r10v,error = get_Ridge_vector(X, Train_data_Y[idx],Test_data_X[idx],Test_data_Y[idx], 10)
+    print("MES of Ridge with reg 10: ", error)
+    if dataset_name[idx]=='C':
+        n_data = 50
+    l1v,error = get_Lasso_vector(X, Train_data_Y[idx],Test_data_X[idx],Test_data_Y[idx], 1/n_data)
+    print("MES of Lasso with reg 1: ", error)
 
-    l1v = get_Lasso_vector(X, Train_data_Y[idx], 1/306)
-    print("MES of Lasso with reg 1: ",cal_MSE(l1v[:-1],lrv[-1],Test_data_X[idx],Test_data_Y[idx]))
-
-    l10v = get_Lasso_vector(X, Train_data_Y[idx], 10/306)
-    print("MES of Lasso with reg 10: ", cal_MSE(l10v[:-1],lrv[-1],Test_data_X[idx],Test_data_Y[idx]))
+    l10v,error = get_Lasso_vector(X, Train_data_Y[idx],Test_data_X[idx],Test_data_Y[idx], 10/n_data)
+    print("MES of Lasso with reg 10: ", error)
 
     plot_data = (lrv[:-1], r1v[:-1], r10v[:-1], l1v[:-1], l10v[:-1])
     colors = ("indigo", "seagreen", "darkslategray", "coral", "firebrick")
