@@ -8,6 +8,7 @@ def output_loss(weight, bias, X_train_data, Y_train_data, X_test_data, Y_test_da
     print("test error: ",MSE(weight, bias, X_test_data, Y_test_data))
 
 def main():
+    print("###################################Q2_5#########################################")
     X_test_data = np.genfromtxt('./data/housing_X_test.csv', delimiter=",")
     X_train_data = np.genfromtxt('./data/housing_X_train.csv', delimiter=",")
     Y_test_data = np.genfromtxt('./data/housing_y_test.csv')
@@ -57,5 +58,6 @@ def main():
     plt.xlabel("passes")
     plt.ylabel("MSE")
     plt.show()
+    print("###################################Q2_5#########################################")
 if __name__ == '__main__':
     main()

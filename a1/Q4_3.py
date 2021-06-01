@@ -6,6 +6,7 @@ def loss(Y,Y_hat):
     return np.linalg.norm((Y-Y_hat),2)**2/len(Y_hat)
 
 def main():
+    print("###################################Q4_3#########################################")
     X_train_F = np.genfromtxt('./data/X_train_F.csv', delimiter=",").T
 
     Y_train_F = np.genfromtxt('./data/Y_train_F.csv', delimiter=",")
@@ -28,14 +29,12 @@ def main():
     plt.xlabel("k")
     plt.ylabel("mean-square error")
     plt.title("least square error, and KNN error VS K on test dataset F")
-    plt.plot([i for i in range(1,10)], [mseloss for _ in range(1,10)], label='MSE of KNN', color="coral")
+    plt.plot([i for i in range(1,10)], [mseloss for _ in range(1,10)], label='MSE of least square linear regression', color="coral")
     K = [i for i in range(1,10)]
-    plt.plot(K, losses, label='MSE of least square linear regression', color="seagreen")
+    plt.plot(K, losses, label='MSE of KNN', color="seagreen")
     plt.legend()
     plt.show()
-
-
-
+    print("###################################Q4_3#########################################")
 
 if __name__ == '__main__':
     main()

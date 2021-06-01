@@ -15,6 +15,7 @@ def ridge_regression_closedform(X_train_data, Y_train_data, Lambda=1):
     return W[:-1], W[-1]
 
 def main():
+    print("###################################Q2_6#########################################")
     X_train_data = np.genfromtxt('./data/housing_X_train.csv', delimiter=",")
     Y_train_data = np.genfromtxt('./data/housing_y_train.csv')
     print("-------------------Newton's method, lambda=0------------------")
@@ -46,5 +47,6 @@ def main():
     reg = Ridge(alpha=10).fit(X_train_data.T, Y_train_data)
     print("weight: \n", reg.coef_)
     print("bias: \n", reg.intercept_)
+    print("###################################Q2_6#########################################")
 if __name__ == '__main__':
     main()

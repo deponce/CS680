@@ -1,0 +1,37 @@
+#all data are in ./data file
+
+#run
+python3 Q1.py
+# output the result for Exercise 1
+
+#run
+python3 Q2_5.py
+# output the result for Exercise 2.5
+
+#run
+python3 Q2_6.py
+# output the result for Exercise 2.6
+
+#run
+python3 Q3.py
+# output the result for Exercise 3
+
+#run
+python3 Q3.py
+# output the result for Exercise 3
+
+#run
+python3 Q4_2.py
+# output the result for Exercise 4.2
+
+#run
+python3 Q4_2.py
+# output the result for Exercise 4.2
+
+#run
+python3 Q4_3.py
+# output the result for Exercise 4.3
+
+#run
+#bash run.sh
+# will run all code

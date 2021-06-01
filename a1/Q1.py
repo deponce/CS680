@@ -2,6 +2,7 @@ from model.models import *
 from matplotlib import pyplot as plt
 
 def main():
+    print("###################################Q1_1#########################################")
     X_train_data = np.genfromtxt('./data/spambase_X.csv', delimiter=",")
     Y_train_data = np.genfromtxt('./data/spambase_y.csv')
     max_pass = 500
@@ -15,6 +16,7 @@ def main():
     plt.plot(x_data, mistakes)
     plt.grid(1)
     plt.show()
+    print("###################################Q1_1#########################################")
 
 if __name__ == '__main__':
     main()

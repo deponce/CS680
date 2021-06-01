@@ -11,6 +11,7 @@ def output_loss(weight, bias, X_train_data, Y_train_data, X_test_data, Y_test_da
     print("test error: ",MSE(weight, bias, X_test_data, Y_test_data))
 
 def main():
+    print("###################################Q4_2#########################################")
     X_train_D = np.genfromtxt('./data/X_train_D.csv', delimiter=",").reshape((1,-1))
 
     Y_train_D = np.genfromtxt('./data/Y_train_D.csv', delimiter=",")
@@ -56,9 +57,9 @@ def main():
     plt.xlabel("k")
     plt.ylabel("mean-square error")
     plt.title("least square error, and KNN error VS K on test dataset D")
-    plt.plot([i for i in range(1,10)],[mseloss for _ in range(1,10)], label='MSE of KNN',color="coral")
+    plt.plot([i for i in range(1,10)],[mseloss for _ in range(1,10)], label='MSE of least square linear regression',color="coral")
     K = [i for i in range(1,10)]
-    plt.plot(K, losses, label='MSE of least square linear regression', color="seagreen")
+    plt.plot(K, losses, label='MSE of KNN', color="seagreen")
     plt.legend()
     plt.show()
     print("-----------------------------dataset E---------------------------------")
@@ -94,11 +95,12 @@ def main():
     plt.xlabel("k")
     plt.ylabel("mean-square error")
     plt.title("least square error, and KNN error VS K on test dataset E")
-    plt.plot([i for i in range(1,10)],[mseloss for _ in range(1,10)], label='MSE of KNN',color="coral")
+    plt.plot([i for i in range(1,10)],[mseloss for _ in range(1,10)], label='MSE of least square linear regression',color="coral")
     K = [i for i in range(1,10)]
-    plt.plot(K, losses, label='MSE of least square linear regression', color="seagreen")
+    plt.plot(K, losses, label='MSE of KNN', color="seagreen")
     plt.legend()
     plt.show()
+    print("###################################Q4_2#########################################")
 
 if __name__ == '__main__':
     main()

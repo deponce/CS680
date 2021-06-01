@@ -1,6 +1,7 @@
 import numpy as np
 from sklearn.linear_model import LinearRegression, Ridge, Lasso
 from matplotlib import pyplot as plt
+print("###################################Q3_1#########################################")
 X_train_A = np.genfromtxt('./data/X_train_A.csv',delimiter = ",")
 X_train_B = np.genfromtxt('./data/X_train_B.csv',delimiter = ",")
 X_train_C = np.genfromtxt('./data/X_train_C.csv',delimiter = ",")
@@ -74,3 +75,4 @@ for idx, X in enumerate(Train_data_X):
     plt.title("train on dataset "+ dataset_name[idx])
     plt.legend(labels)
     plt.show()
+print("###################################Q3_1#########################################")
