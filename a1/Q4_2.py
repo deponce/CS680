@@ -55,7 +55,7 @@ def main():
                 color = "firebrick"
                 Lable = "9NN result"
             plot_index = X_test_D[0].argsort()
-            plt.plot(X_test_D[0][plot_index], y_hat[plot_index], c=color, alpha=1, label=Lable, marker='p')
+            plt.plot(X_test_D[0][plot_index], y_hat[plot_index], c=color, alpha=0.5, label=Lable, marker='p')
     plt.legend()
     plt.subplot(1,2,2)
     plt.xlabel("k")
@@ -96,7 +96,7 @@ def main():
                 color = "firebrick"
                 Lable = "9NN result"
             plot_index=X_test_E[0].argsort()
-            plt.plot(X_test_E[0][plot_index], y_hat[plot_index], c=color, alpha=1, label=Lable, marker='p')
+            plt.plot(X_test_E[0][plot_index], y_hat[plot_index], c=color, alpha=0.5, label=Lable, marker='p')
     plt.legend()
     plt.subplot(1,2,2)
     plt.xlabel("k")

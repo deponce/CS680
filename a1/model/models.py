@@ -87,7 +87,6 @@ class models:
             for i in range(k):
                 cnt += arra[i].y
             return cnt/k
-
         def fit(self,X, Y):
             self.train_X = X.T
             self.train_Y = Y
@@ -96,7 +95,6 @@ class models:
             for i in range(n_train):
                 train.append(self.data_pair(self.train_X[i],self.train_Y[i], 0))
             self.train_pairs = train
-
         def kthSmallest(self,arr, l, r, k):
             def partition(arr, l, r):
                 x = arr[r].dist

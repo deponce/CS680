@@ -29,12 +29,11 @@ def cal_MSE(w,b,x,y):
     return np.linalg.norm(e, ord = 2)**2/n
 
 def get_Lasso_vector(X, Y,test_x,test_y, reg = 0.0):
-    model = Lasso(alpha=reg,tol = 0.0005)
+    model = Lasso(alpha=reg)
     model.fit(X, Y)
     w = model.coef_
     b = model.intercept_
-    y_hat = model.predict(test_x)
-    error = mean_squared_error(y_hat, test_y)
+    error = mean_squared_error(test_y, model.predict(test_x))
     return np.r_[w, b], error
 
 def get_Ridge_vector(X, Y,test_x,test_y, reg = 0.0):
@@ -42,8 +41,7 @@ def get_Ridge_vector(X, Y,test_x,test_y, reg = 0.0):
     model.fit(X, Y)
     w = model.coef_
     b = model.intercept_
-    y_hat = model.predict(test_x)
-    error = mean_squared_error(y_hat, test_y)
+    error = mean_squared_error(test_y, model.predict(test_x))
     return np.r_[w, b], error
 
 def get_LinearRegression_vector(X, Y,test_x,test_y):
@@ -51,8 +49,7 @@ def get_LinearRegression_vector(X, Y,test_x,test_y):
     model.fit(X, Y)
     w = model.coef_
     b = model.intercept_
-    y_hat = model.predict(test_x)
-    error = mean_squared_error(y_hat,test_y)
+    error = mean_squared_error(test_y, model.predict(test_x))
     return np.r_[w,b], error
 
 dataset_name = ['A', 'B', 'C']
