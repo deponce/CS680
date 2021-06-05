@@ -42,7 +42,7 @@ def main():
     plt.title("least square solution, 1NN solution, and 9NN soultion on dataset D")
     plt.scatter(X_train_D,Y_train_D, c="darkslategray", alpha=1, label="Training set")
     #plt.scatter(X_test_D, Y_test_D, c = "seagreen", alpha=0.5, label="test set",edgecolors="seagreen")
-    plt.plot(X_test_D[0], y_hat, c = "indigo", alpha=0.5, label="closed-form result", visible=False)
+    plt.plot(X_test_D[0], y_hat, c = "indigo", alpha=0.5, label="closed-form result")
     plt.xlabel("x value")
     plt.ylabel("y value")
     losses = []
@@ -84,7 +84,7 @@ def main():
     plt.subplot(1,2,1)
     plt.title("least square solution, 1NN solution, and 9NN soultion on dataset E")
     plt.scatter(X_train_E,Y_train_E, c="darkslategray", alpha=0.8, label="Training set")
-    plt.scatter(X_test_E, Y_test_E, c="seagreen", alpha=0.5, label="test set", edgecolors="seagreen")
+    #plt.scatter(X_test_E, Y_test_E, c="seagreen", alpha=0.5, label="test set", edgecolors="seagreen")
 
     plt.plot(X_test_E[0], y_hat, c="indigo", alpha=1, label="closed-form result")
 
