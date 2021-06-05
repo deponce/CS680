@@ -1,0 +1,54 @@
+
+#Please add all dataset into ./data file
+#The ./code file should be arrange like this
+#----------------------------------------#
+#code                                    #
+#|_ proper_documentation.txt             #
+#|_ Q_1.py                               #
+#|_ Q_2.py                               #
+#|_ ...                                  #
+#|__ data                                #
+#|       |_ housing_X_training.cvs       #
+#|       |_ housing_y_testing.cvs        #
+#|       |_ ... .cvs                     #
+#|_ src                                  #
+#        |_ method.py                    #
+#        |_ models.py                    #
+#        |_ metric.py                    #
+#                                        #
+#----------------------------------------#
+#run
+python3 Q1.py
+# output the result for Exercise 1
+
+#run
+python3 Q2_5.py
+# output the result for Exercise 2.5
+
+#run
+python3 Q2_6.py
+# output the result for Exercise 2.6(bonus)
+
+#run
+python3 Q3.py
+# output the result for Exercise 3
+
+#run
+python3 Q3.py
+# output the result for Exercise 3
+
+#run
+python3 Q4_2.py
+# output the result for Exercise 4.2
+
+#run
+python3 Q4_2.py
+# output the result for Exercise 4.2
+
+#run
+python3 Q4_3.py
+# output the result for Exercise 4.3
+
+#run
+#bash run.sh
+# will run all code
