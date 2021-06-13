@@ -29,3 +29,8 @@ clf = svm.SVC(kernel='linear', C=float('inf'))
 
 clf.fit(X_train_A, Y_train_A)
 print(clf.n_support_)
+
+clf = svm.SVC(kernel='linear', C=1)
+
+clf.fit(X_train_A, Y_train_A)
+print(clf.n_support_)

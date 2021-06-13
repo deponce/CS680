@@ -38,11 +38,12 @@ def main():
     model.fit(X_train_D, Y_train_D)
     y_hat = model.predict(X_test_D)
     mseloss = loss(Y_test_D,y_hat)
+    y_hat = model.predict(plot_x_D)
     plt.subplot(1,2,1)
     plt.title("least square solution, 1NN solution, and 9NN soultion on dataset D")
     plt.scatter(X_train_D,Y_train_D, c="darkslategray", alpha=1, label="Training set")
     #plt.scatter(X_test_D, Y_test_D, c = "seagreen", alpha=0.5, label="test set",edgecolors="seagreen")
-    plt.plot(X_test_D[0], y_hat, c = "indigo", alpha=0.5, label="closed-form result")
+    plt.plot(plot_x_D[0], y_hat, c = "indigo", alpha=0.5, label="closed-form result")
     plt.xlabel("x value")
     plt.ylabel("y value")
     losses = []
