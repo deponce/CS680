@@ -1,0 +1,26 @@
+#Please add all dataset into ./data file
+#The ./code file should be arrange like this
+#----------------------------------------#
+#code                                    #
+#|_ documentation.txt                    #
+#|_ ex2.py                               #
+#|_ ex3.py                               #
+#|_ ...                                  #
+#|__ data                                #
+#|       |_ ... .cvs                     #
+#|       |_ ... .cvs                     #
+#|       |_ ... .cvs                     # 
+#                                        #
+#----------------------------------------#
+
+#run 
+python3 ex2.py
+# output the result for Exercise 2
+
+#run 
+python3 ex3.py ./data/X_train_C.csv ./data/Y_train_C.csv ./data/X_test_C.csv ./data/Y_test_C.csv 1.0 0.5
+# output the result for Exercise 3
+
+#run
+python3 A2E2_3.py
+#generate dataset in ./data file

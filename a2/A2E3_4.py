@@ -20,7 +20,7 @@ def SVR(X_train, Y_train, C, eps):
 
 def compute_loss(X, Y, w, b, C, eps):
     err = compute_error(X, Y, w, b, C, eps)
-    loss = err+ 1/2*w.T.dot(w)
+    loss = err + 1/2*w.T.dot(w)
     return loss
 
 def compute_error(X, Y, w, b, C, eps):
@@ -32,7 +32,7 @@ Y_test_C = np.genfromtxt('./data/Y_test_C.csv', delimiter=",")
 X_train_C = np.genfromtxt('./data/X_train_C.csv', delimiter=",")
 Y_train_C = np.genfromtxt('./data/Y_train_C.csv', delimiter=",")
 
-C = 1
+C = 1.0
 eps = 0.5
 
 #print(SVR(X_train_C, Y_train_C, C, eps))
