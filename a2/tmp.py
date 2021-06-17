@@ -1,34 +1,53 @@
 import numpy as np
-from sklearn import svm
-from sklearn import decomposition
-import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
-import statsmodels.api as sm
+import copy
+from matplotlib import pyplot as plt
 
-X_train_A = np.genfromtxt('data/X_train_A.csv', delimiter=',')
+def SVR(X_train, Y_train, C, eps):
+    #Implement me! You may choose other parameters eta, max_pass, etc. internally
+    #Return: parameter vector w, b
+    w = np.zeros(X_train.shape[1])
+    b = np.zeros(1)
+    max_pass = 500
+    lr = 1e-4
+    loss = []
+    error = []
+    last_loss = float("inf")
+    for _ in range(max_pass):
+        for i in range(Y_train.shape[0]):
+            if np.abs(Y_train[i]-(X_train[i].dot(w)+b)) >= eps:
+                cpw = copy.deepcopy(w)
+                w = cpw - lr*(-np.sign(Y_train[i]-(X_train[i].dot(cpw)+b))*X_train[i])
+                b = b - lr*C*(-np.sign(Y_train[i]-(X_train[i].dot(cpw)+b)))
+            w = w/(1+lr)
 
-Y_train_A = np.genfromtxt('data/Y_train_A.csv', delimiter=',')
+        current_loss = compute_loss(X_train, Y_train,w,b,C,eps)
+        if abs(last_loss - current_loss)<0.01:
+            lr = lr/1.414
+            print(lr)
+        loss.append(compute_loss(X_train, Y_train,w,b,C,eps))
+        last_loss = current_loss
+        error.append(compute_error(X_train, Y_train,w,b,C,eps))
+    return loss, error
 
-clf = svm.SVC(kernel='linear', C=1)
+def compute_loss(X, Y, w, b, C, eps):
+    err = compute_error(X, Y, w, b, C, eps)
+    loss = err+ 1/2*w.T.dot(w)
+    return loss
 
-clf.fit(X_train_A, Y_train_A)
+def compute_error(X, Y, w, b, C, eps):
+    err = C*np.sum(np.maximum(np.abs(Y-X.dot(w)-b)-eps,0))
+    return err
+X_test_C = np.genfromtxt('./data/X_test_C.csv', delimiter=",")
+Y_test_C = np.genfromtxt('./data/Y_test_C.csv', delimiter=",")
 
-pca = decomposition.PCA(n_components=3)
-xs = pca.fit(X_train_A).transform(X_train_A)
+X_train_C = np.genfromtxt('./data/X_train_C.csv', delimiter=",")
+Y_train_C = np.genfromtxt('./data/Y_train_C.csv', delimiter=",")
 
-"""
-fig = plt.figure()
-ax1 = plt.axes(projection='3d')
+C = 1
+eps = 0.5
 
+#print(SVR(X_train_C, Y_train_C, C, eps))
+loss, error = SVR(X_train_C, Y_train_C, C, eps)
+plt.plot(loss)
 
-
-ax1.scatter3D(xs.T[0],xs.T[1],xs.T[2])
 plt.show()
-"""
-plt.scatter(xs.T[0],xs.T[1])
-plt.show()
-# A2E2_2
-
-coefficient = clf.coef_
-
-y_hat_A = X_train_A.dot(coefficient[0])+clf.intercept_
