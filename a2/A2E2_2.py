@@ -49,6 +49,7 @@ print(n_Y_error/Y_hat_B.shape[0])
 
 clf = svm.SVC(kernel='linear', C=1)
 clf.fit(X_train_B, Y_train_B)
+
 print("n_sv",clf.n_support_)
 print("finish fitting soft margin SVM")
 

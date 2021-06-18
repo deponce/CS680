@@ -152,6 +152,8 @@ np.savetxt("data/generate_data_Y.cvs",Y_train_A[clf.support_], delimiter=",")
 
 X_train = np.loadtxt('data/generate_data_X.cvs', delimiter=",")
 Y_train = np.loadtxt('data/generate_data_Y.cvs', delimiter=",")
+clf = svm.SVC(kernel='linear', C=float('inf'))
+clf.fit(X_train_A, Y_train_A)
+print("There are ", Y_train.shape[0], "opints in the generated dataset.")
+print(np.sum(clf.n_support_), " of them are support vectors")
 print("#    Done!    #")
-
-
