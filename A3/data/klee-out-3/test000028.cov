@@ -1,0 +1,10 @@
+../../src/mkdir.c:194
+../lib/selinux/selinux.h:0
+../lib/selinux/selinux.h:27
+../../lib/quote.c:0
+../../lib/quotearg.c:0
+../../lib/quotearg.c:657
+../../lib/quotearg.c:658
+../../lib/quotearg.c:666
+libc/unistd/getopt.c:700
+libc/unistd/getopt.c:735

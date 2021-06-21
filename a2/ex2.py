@@ -147,8 +147,8 @@ while True:
         if(np.sum(clf.n_support_) == num_point):
             break
 
-np.savetxt("data/generate_data_X.cvs",X_train_A[clf.support_], delimiter=",")
-np.savetxt("data/generate_data_Y.cvs",Y_train_A[clf.support_], delimiter=",")
+np.savetxt("data/generate_data_X.cvs",pot_x, delimiter=",")
+np.savetxt("data/generate_data_Y.cvs",pot_y, delimiter=",")
 
 X_train = np.loadtxt('data/generate_data_X.cvs', delimiter=",")
 Y_train = np.loadtxt('data/generate_data_Y.cvs', delimiter=",")
