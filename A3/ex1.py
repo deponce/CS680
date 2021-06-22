@@ -3,13 +3,12 @@ import copy
 
 def get_p_classes(y):
     n_data = y.shape[0]
-    classes = {}
+    p_classes = {}
     for i in y:
-        if i not in classes:
-            classes[i] = 0
+        if i not in p_classes:
+            p_classes[i] = 0
         else:
-            classes[i] += 1
-    p_classes = np.array(list(classes.values())) / n_data
+            p_classes[i] += 1/ n_data
     return p_classes
 
 def misclassification_error(p_classes):
@@ -53,25 +52,27 @@ class DecisionTree:
         split_val = 0
         right_datapair = None
         left_datapair = None
-        rt_right_p = None
-        rt_left_p = None
         for feature_idx in range(self.n_features):
             sorted_data_pair = data_pair[data_pair[:,feature_idx].argsort()]
             for data_idx in range(1, n_point):
-                left_p = get_p_classes(sorted_data_pair[:,-1][:data_idx])
-                right_p = get_p_classes(sorted_data_pair[:,-1][data_idx:])
-                loss_val = data_idx*loss_fn(left_p)+\
-                           (n_point-data_idx)*loss_fn(right_p)
+                left_p_classes = get_p_classes(sorted_data_pair[:,-1][:data_idx])
+                left_p = np.array(list(left_p_classes.values()))
+
+                right_p_classes = get_p_classes(sorted_data_pair[:,-1][data_idx:])
+                right_p = np.array(list(right_p_classes.values()))
+                loss_val = (data_idx+1)*loss_fn(left_p)+\
+                           (n_point-(data_idx+1))*loss_fn(right_p)
                 if loss_val < cur_loss:
+                    # max(a, key = a.get)
                     cur_loss = loss_val
                     split_feature = feature_idx
                     split_val = data_pair[data_idx, feature_idx]
                     right_datapair = sorted_data_pair[:data_idx]
                     left_datapair = sorted_data_pair[data_idx:]
-                    rt_left_p = left_p
-                    rt_right_p = right_p
+                    left_label = max(left_p_classes, key=left_p_classes.get)
+                    right_label = max(right_p_classes, key=right_p_classes.get)
         #left_label
-        return split_feature, split_val, right_datapair, left_datapair, rt_right_p, rt_left_p
+        return split_feature, split_val, right_datapair, left_datapair, right_label, left_label
 
     def __is_pure(self,y):
         if y.shape[0] == 1:
@@ -95,30 +96,52 @@ class DecisionTree:
         if self.__is_pure(data_pair[:,-1]) or self.__all_feature_are_same(data_pair[:,:-1]):
             return
         else:
-            split_feature, split_val, right_datapair, left_datapair, right_p, left_p = \
+            #split_feature, split_val, right_datapair, left_datapair, right_label, left_label
+            split_feature, split_val, right_datapair, left_datapair, right_label, left_label = \
                 self.__get_split__(data_pair, loss_chr)
             root.split_feature = split_feature
             root.split_value = split_val
             if left_datapair.shape[0] >= 1:
                 root.left_child = node()
                 root.left_child.depth = root.depth+1
+                root.left_child.dominant_label = left_label
                 self.__recurrent_bulid__(left_datapair, root.left_child, loss_chr)
 
             if right_datapair.shape[0] >= 1:
                 root.right_child = node()
                 root.right_child.depth = root.depth+1
+                root.right_child.dominant_label = right_label
                 self.__recurrent_bulid__(right_datapair, root.right_child, loss_chr)
 
     def build(self, X, y, loss_chr):
         data_pair = np.c_[X,y]
         self.n_features = X.shape[1]
         Node = self.root
+        root_p_classes=get_p_classes(y)
+        root_label = max(root_p_classes, key=root_p_classes.get)
+        self.root.dominant_label = root_label
         self.__recurrent_bulid__(data_pair, Node, loss_chr)
         return
+    def predict_x(self, root, x, max_depth):
+        feature = root.split_feature
+        value = root.split_value
+        if x[feature] > value:
+            if root.right_child:
+                return self.predict_x(root.right_child, x, max_depth)
+            else:
+                return root.dominant_label
+        else:
+            if root.left_child:
+                return self.predict_x(root.right_child, x, max_depth)
+            else:
+                return root.dominant_label
 
-    def predict(self, X):
-        # Implement me!
-        return
+    def predict(self, X, max_depth):
+            result = np.array([])
+            for x in X:
+                y_hat = self.predict_x(self.root, x, max_depth)
+                result = np.append(result, y_hat)
+            return result
 
     # Load data
 
@@ -131,4 +154,6 @@ y_test = np.loadtxt('data/y_test.csv', delimiter=",").astype(int)
 
 DT = DecisionTree()
 DT.build(X_train, y_train, "entropy")
+Y_train_hat = DT.predict(X=X_train, max_depth=100)
+
 print(DT)
