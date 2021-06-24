@@ -283,21 +283,40 @@ class BaggingTree:
             result = np.append(result, self.predict_x(X[i], max_depth = float('inf')))
         return result
 
-print("#--------------------DecisionTree--------------------#")
+
+print("#-------------------------DecisionTree-------------------------#")
+training_acc_lst = np.array([])
+test_acc_lst = np.array([])
 for _ in range(11):
     BT = BaggingTree(n_trees=101, loss_chr="entropy", max_depth=3)
     BT.build(X=X_train, y=y_train)
     y_hat = BT.predict(X_train)
     training_acc = cal_accuracy(y_hat, y_train)
+    training_acc_lst = np.append(training_acc_lst, training_acc)
     y_hat = BT.predict(X_test)
     test_acc = cal_accuracy(y_hat, y_test)
+    test_acc_lst = np.append(test_acc_lst, test_acc)
     print("training_acc: ", training_acc, "test_acc: ", test_acc)
-print("#--------------------RandomForest--------------------#")
+print("#-------------------------DecisionTree-------------------------#")
+print("minimum test accuracy", np.min(test_acc_lst))
+print("median test accuracy", np.median(test_acc_lst))
+print("maximum test accuracy", np.max(test_acc_lst),"\n\n")
+
+print("#-------------------------RandomForest-------------------------#")
+training_acc_lst = np.array([])
+test_acc_lst = np.array([])
 for _ in range(11):
     RF = RandomForest(n_trees=101, loss_chr="entropy", n_random_feature=4, max_depth=3)
     RF.build(X=X_train, y=y_train)
     y_hat = RF.predict(X_train)
-    training_acc = cal_accuracy(y_hat, y_train)
+    training_acc_lst = training_acc = cal_accuracy(y_hat, y_train)
+    np.append(training_acc_lst, training_acc)
     y_hat = RF.predict(X_test)
     test_acc = cal_accuracy(y_hat, y_test)
+    test_acc_lst = np.append(test_acc_lst, test_acc)
     print("training_acc: ", training_acc, "test_acc: ", test_acc)
+print("#-------------------------RandomForest-------------------------#")
+print("minimum test accuracy", np.min(test_acc_lst))
+print("median test accuracy", np.median(test_acc_lst))
+print("maximum test accuracy", np.max(test_acc_lst))
+
