@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import random
 
 
 def get_p_classes(y):
@@ -18,10 +19,14 @@ def get_p_classes(y):
 
 
 def misclassification_error(p_classes):
+    if p_classes.shape[0] == 1:
+        return 0
     return np.min(p_classes)
 
 
 def gini_coefficient(p_classes):
+    if p_classes.shape[0] == 1:
+        return 0
     return np.cumprod(p_classes)[-1]
 
 
@@ -41,7 +46,8 @@ class node:
         self.split_value = None
         self.depth = 0
         self.dominant_label = None
-        self.loss_chr=loss_chr
+        self.loss_chr = loss_chr
+        return
 
 class DecisionTree:
     # You will likely need to add more arguments to the constructor
@@ -69,7 +75,12 @@ class DecisionTree:
             return misclassification_error
 
     def __random_pick_n_features(self, n):
-        return np.array([np.random.randint(self.n_features) for _ in range(n)])
+        rt = []
+        while len(rt) != n:
+            tmp = random.randint(0,self.n_features - 1)
+            if tmp not in rt:
+                rt.append(tmp)
+        return np.array(rt)
 
     def __get_split__(self, data_pair, loss_chr, random_feature_idx):
         loss_fn = self.__get_loss_fn(loss_chr)
@@ -77,7 +88,7 @@ class DecisionTree:
         cur_loss = float('inf')
         split_feature = 0
         split_val = 0
-        right_datapair = None
+        right_datapair = data_pair
         left_datapair = None
         if random_feature_idx.shape[0]:
             feature_idx_lst = random_feature_idx
@@ -102,6 +113,8 @@ class DecisionTree:
                         right_datapair = sorted_data_pair[data_idx+1:]
                         min_left_p_classes = left_p_classes
                         min_right_p_classes = right_p_classes
+        #print(cur_loss)
+        #print(split_feature,": ", split_val, loss_val/n_point)
         left_label = max(min_left_p_classes, key=min_left_p_classes.get)
         right_label = max(min_right_p_classes, key=min_right_p_classes.get)
         #left_label
