@@ -27,7 +27,10 @@ def misclassification_error(p_classes):
 def gini_coefficient(p_classes):
     if p_classes.shape[0] == 1:
         return 0
-    return np.cumprod(p_classes)[-1]
+    cum = 1
+    for p in p_classes:
+        cum *= p
+    return cum
 
 
 def entropy(p_classes):
