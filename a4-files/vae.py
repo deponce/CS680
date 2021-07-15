@@ -44,7 +44,8 @@ class VAE(nn.Module):
         self.decoder = nn.Sequential(
             nn.Linear(self.latent_size, self.encoder_hidden_size),
             nn.ReLU(),
-            nn.Linear(self.encoder_hidden_size, self.flatten_input_size)
+            nn.Linear(self.encoder_hidden_size, self.flatten_input_size),
+            nn.Sigmoid()
         )
     def encode(self, x):
         # The encoder will take an input of size 784, and will produce two vectors of size latent_size
