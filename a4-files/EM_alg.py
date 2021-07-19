@@ -20,7 +20,7 @@ def get_x_y(mnist):
     x = mnist[:,1:]
     return x, y
 
-
+"""
 print("load Mnist dataset")
 mnist_training = np.loadtxt("./data/mnist_train.csv", delimiter=',')
 mnist_test = np.loadtxt("./data/mnist_test.csv", delimiter=',')
@@ -52,3 +52,4 @@ for num in range(2):
     print("acc of ", num, "is: ", len(maxim[maxim == num])/len(maxim))
 plt.imshow(mnist_training_x[0])
 plt.show()
+"""
