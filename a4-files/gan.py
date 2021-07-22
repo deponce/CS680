@@ -72,7 +72,7 @@ class Discriminator(nn.Module):
         label = self.discriminator(x)
         return label
 
-criterion = nn.BCELoss()
+criterion = nn.BCELoss(size_average=False)
 
 # Create batch of latent vectors that we will use to visualize
 #  the progression of the generator
