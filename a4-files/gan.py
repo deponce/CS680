@@ -18,11 +18,11 @@ device = torch.device("cuda" if cuda else "cpu")
 
 kwargs = {'num_workers': 1, 'pin_memory': True} if cuda else {}
 train_loader = torch.utils.data.DataLoader(
-    datasets.MNIST('../data', train=True, download=True,
+    datasets.MNIST('./data', train=True, download=True,
                    transform=transforms.ToTensor()),
     batch_size=batch_size, shuffle=True, **kwargs)
 test_loader = torch.utils.data.DataLoader(
-    datasets.MNIST('../data', train=False, transform=transforms.ToTensor()),
+    datasets.MNIST('./data', train=False, transform=transforms.ToTensor()),
     batch_size=batch_size, shuffle=True, **kwargs)
 """
 def weights_init(m):
@@ -88,7 +88,8 @@ fake_label = 0.
 def train(generator, generator_optimizer, discriminator, discriminator_optimizer):
     # Trains both the generator and discriminator for one epoch on the training dataset.
     # Returns the average generator and discriminator loss (scalar values, use the binary cross-entropy appropriately)
-
+    avg_discriminator_loss = 0
+    avg_generator_loss = 0
     for i, data in enumerate(train_loader, 0):
         tdata = data[0].flatten(start_dim=1)
         ############################
@@ -129,9 +130,9 @@ def train(generator, generator_optimizer, discriminator, discriminator_optimizer
         generator_loss = criterion(output, label)
         generator_loss.backward()
         generator_optimizer.step()
-        avg_generator_loss = generator_loss/batch_size
-        avg_discriminator_loss = discriminator_loss/batch_size
-    return avg_generator_loss, avg_discriminator_loss
+        avg_generator_loss += generator_loss/batch_size
+        avg_discriminator_loss += discriminator_loss/batch_size
+    return avg_generator_loss/(i+1), avg_discriminator_loss/(i+1)
 
 def test(generator, discriminator):
     # Runs both the generator and discriminator over the test dataset.

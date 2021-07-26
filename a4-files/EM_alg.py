@@ -9,7 +9,7 @@ loss_1_10=[]
 k_s = range(1,11)
 modelst = []
 for k in tqdm(k_s):
-    modelst.append(GMM(k=k, max_iter=500, tol=1e-5))
+    modelst.append(GMM(k=k, max_iter=500, tol=1e-5, S_scale=(np.max(gmm_dataset)-np.min(gmm_dataset))**2))
     loss = modelst[-1].fit(gmm_dataset)
     loss_1_10.append(loss[-1])
     #plt.plot(loss)

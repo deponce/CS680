@@ -1,4 +1,5 @@
 import numpy as np
+from scipy.special import logsumexp
 
 def psudo_div(a, b):
     #zeros = np.zeros_like(a)
@@ -14,7 +15,7 @@ def normlize_col(arr):
     return arr-max
 
 class GMM:
-    def __init__(self, k, max_iter, tol=1e-5, name=None, using_S_thr=False, S_thr=0):
+    def __init__(self, k, max_iter, tol=1e-5, S_scale = 1, name=None, using_S_thr=False, S_thr=0):
         self.name = name
         self.k = k
         _un_norm_Pi = np.random.random(self.k)
@@ -29,10 +30,12 @@ class GMM:
         self.using_S_thr = using_S_thr
         if self.using_S_thr:
             self.S_thr = S_thr
+        self.S_scale = S_scale
+        self.Mu = None
     def fit(self, x):
         n_data, dim_data = x.shape
-        self.S = np.ones((self.k, dim_data))
-        self.Mu = np.max(x, axis=0)*np.random.random((self.k, dim_data))  # means(centroids of clusters)
+        self.S = self.S_scale*np.ones((self.k, dim_data))
+        self.Mu = np.max(x, axis=0)*np.random.random((self.k, dim_data)) # means(centroids of clusters)
         log_R_ik = np.zeros((self.k, n_data)) # log responsibility of each data point
         for iter in range(self.max_iter):
             for k in range(self.k):
@@ -41,8 +44,9 @@ class GMM:
                 #if float("inf") in index:
                 #    print("a")
                 index = index - np.min(index)
-                prex_divd = np.sum(np.log(self.S[k], out=np.zeros_like(self.S[k]), where=self.S[k] != 0))
+                prex_divd = np.sum(np.log(2*np.pi*self.S[k], out=np.zeros_like(self.S[k]), where=self.S[k] != 0))
                 log_R_ik[k] = np.log(self.Pi[k], out=np.zeros_like(self.Pi[k]), where=self.Pi[k] != 0)-0.5*prex_divd-0.5*index
+
             R_ik = np.exp(log_R_ik)
             #if float("inf") in R_ik:
             #    print("a")
@@ -64,8 +68,7 @@ class GMM:
                 un_norm_s = np.sum(np.expand_dims(R_ik[k], axis=0).T * (x - self.Mu[k]) ** 2, 0)
                 self.S[k] = np.divide(un_norm_s, self.r[k], out=np.zeros_like(un_norm_s), where=self.r[k] != 0)
             if self.using_S_thr:
-                self.S[self.S < 1/n_data] = 0
-        #self.S_mask = self.S!=0
+                self.S[self.S < self.S_thr] = 0
         return self.l
     def predict(self, x):
         n_data, dim_data = x.shape

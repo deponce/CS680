@@ -7,7 +7,7 @@ from torchvision import datasets, transforms
 from torchvision.utils import save_image
 from IPython.display import Image, display
 import matplotlib.pyplot as plt
-
+from torch.nn import functional as F
 # !mkdir results
 
 batch_size = 100
@@ -18,11 +18,11 @@ device = torch.device("cuda" if cuda else "cpu")
 
 kwargs = {'num_workers': 1, 'pin_memory': True} if cuda else {}
 train_loader = torch.utils.data.DataLoader(
-    datasets.MNIST('../data', train=True, download=True,
+    datasets.MNIST('./data', train=True, download=True,
                    transform=transforms.ToTensor()),
     batch_size=batch_size, shuffle=True, **kwargs)
 test_loader = torch.utils.data.DataLoader(
-    datasets.MNIST('../data', train=False, transform=transforms.ToTensor()),
+    datasets.MNIST('./data', train=False, transform=transforms.ToTensor()),
     batch_size=batch_size, shuffle=True, **kwargs)
 
 
@@ -64,7 +64,7 @@ class VAE(nn.Module):
         # It takes in the coordinatewise means and log-variances from the encoder (each of dimension latent_size),
         # and returns a sample from a Gaussian with the corresponding parameters
         # TODO
-        std = torch.exp(0.5 * log_variances)
+        std = torch.exp(0.5*log_variances)
         eps = torch.randn_like(std)
         return eps * std + means
 
@@ -94,8 +94,10 @@ def vae_loss_function(reconstructed_x, x, means, log_variances):
     # -- this is sometimes done for data in [0,1] for easier optimization)
     # The KL divergence is -1/2 * sum(1 + log_variances - means^2 - exp(log_variances)) as described in lecture
     # Returns loss (reconstruction + KL divergence) and reconstruction loss only (both scalars)
-    kl_divergence = torch.mean(-1/2 * sum(1 + log_variances - means**2 - torch.exp(log_variances)))
-    reconstruction_loss = torch.norm(reconstructed_x - x)
+    kl_divergence = -1/2 * torch.sum(1 + log_variances - means.pow(2) - log_variances.exp())
+    #reconstruction_loss_fn = nn.CrossEntropyLoss()
+    reconstruction_loss_fn = nn.BCELoss(reduce=True, reduction='sum', size_average=False)
+    reconstruction_loss = reconstruction_loss_fn(reconstructed_x.flatten(start_dim=0), x.flatten(start_dim=0))
     loss = reconstruction_loss + kl_divergence
     return loss, reconstruction_loss
 
@@ -109,33 +111,33 @@ def train(model, optimizer):
     for i, data in enumerate(train_loader):
         tdata = data[0].flatten(start_dim=1)
         optimizer.zero_grad()
+        tdata = tdata.to(device)
         reconstr_img, means, log_variances = model(tdata)
         loss, reconstruction_loss = vae_loss_function(reconstr_img, tdata, means, log_variances)
-        loss.backward()
         train_loss += loss.item()
         train_reconstruction_loss += reconstruction_loss.item()
+        loss.backward()
         optimizer.step()
     avg_train_loss = train_loss/len(train_loader.dataset)
     avg_train_reconstruction_loss = train_reconstruction_loss/len(train_loader.dataset)
     return avg_train_loss, avg_train_reconstruction_loss
-
-
 def test(model):
     # Runs the VAE on the test dataset
     # Returns the average (over the dataset) loss (reconstruction + KL divergence)
     # and reconstruction loss only (both scalars)
-    # TODO
     model.eval()
     test_loss = 0
     test_reconstruction_loss = 0
-    for i, (data, _) in enumerate(test_loader):
-        tdata = data[0].flatten(start_dim=1)
-        reconstr_img, means, log_variances = model(tdata)
-        loss, reconstruction_loss = vae_loss_function(reconstr_img, tdata, means, log_variances)
-        test_loss += loss.item()
-        test_reconstruction_loss += reconstruction_loss.item()
-    avg_test_loss = test_loss/len(test_loader.dataset)
-    avg_test_reconstruction_loss = test_reconstruction_loss/len(test_loader.dataset)
+    with torch.no_grad():
+        for i, (data, _) in enumerate(test_loader):
+            tdata = data[0].flatten(start_dim=1)
+            tdata = tdata.to(device)
+            reconstr_img, means, log_variances = model(tdata)
+            loss, reconstruction_loss = vae_loss_function(reconstr_img, tdata, means, log_variances)
+            test_loss += loss.item()
+            test_reconstruction_loss += reconstruction_loss.item()
+    avg_test_loss = test_loss/(i+1)
+    avg_test_reconstruction_loss = test_reconstruction_loss/(i+1)
     return avg_test_loss, avg_test_reconstruction_loss
 
 
