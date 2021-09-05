@@ -1,1 +1,1 @@
-# CS680 assignment
+# CS480/680 assignment
